@@ -4,27 +4,35 @@ import { CartContext } from '../../context/cart.context';
 
 import './checkout-item.styles.scss'
 
-const CheckoutItem = ({product}) => {
-    const {decreaseItemQuantity, increaseItemQuantity, removeItemFromCart} = useContext(CartContext);
-    const {imageUrl, name, price, quantity, id} = product;
+const CheckoutItem = ({cartItem}) => {
+    const {addItemToCart, removeItemFromCart, clearItemFromCart} = useContext(CartContext);
+    const {imageUrl, name, price, quantity, id} = cartItem;
 
-    const decreaseQuantity = () => decreaseItemQuantity(id);
-
-    const increaseQuantity = () => increaseItemQuantity(id);
-
-    const removeProduct = () => removeItemFromCart(id);
+    const addProduct = () => addItemToCart(cartItem);
+    const removeProduct = () => removeItemFromCart(cartItem);
+    const clearProduct = () => clearItemFromCart(cartItem);
 
     return(
-        <div>
-            <img className='image-container' src={imageUrl} alt={name}/>
-            <h5 className='name'>{name}</h5>
-            <div>
-                <span className='arrow' onClick={decreaseQuantity}>{"<"}</span>
-                <span className='quantity'>{quantity}</span>
-                <span className='arrow' onClick={increaseQuantity}>{">"}</span>
+        <div className='checkout-item-container'>
+            <div className='image-container'>
+                <img src={imageUrl} alt={name}/>
             </div>
+
+            <span className='name'>{name}</span>
+            <span className='quantity'>
+                <div className='arrow' onClick={removeProduct}>
+                    &#10094;
+                </div>
+                <span className='value'>
+                     {quantity}
+                </span>
+                <div className='arrow' onClick={addProduct}>
+                    &#10095;
+                </div>
+            </span>
             <span className='price'>{price}</span>
-            <span className='remove-button' onClick={removeProduct}>X</span>
+
+            <div className='remove-button' onClick={clearProduct}>&#10005;</div>
         </div>
     )
 }
