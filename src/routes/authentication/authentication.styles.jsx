@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 
 const size = {
     mobile: "320px",
@@ -30,12 +30,20 @@ export const laptop= (inner) => css`
 
 export const AuthenticationContainer = styled.div`
     display: flex;
-    width: 900px;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
     margin: 90px auto;
 
     ${mobile(css`
-        flex-direction: column;
-        width: 340px;
+   `)};
+
+   ${tablet(css`
+   `)};
+
+   ${laptop(css`
+   `)};
+
+   ${desktop(css`
    `)};
 `;
