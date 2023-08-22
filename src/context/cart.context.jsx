@@ -1,4 +1,5 @@
-import { createContext, useState, useEffect } from "react"; 
+import { clear } from "@testing-library/user-event/dist/clear";
+import { createContext, useReducer, useEffect } from "react"; 
 
 const clearCartItem = (cartItems, productToClear) => {
     return cartItems.filter(item => item.id !== productToClear.id)
@@ -40,6 +41,55 @@ const addCartItem = (cartItems, productToAdd) => {
     return [...cartItems, {...productToAdd, quantity: 1}]
 }
 
+export const CART_ACTION_TYPES = {
+    'TOGGLE_CART': 'TOGGLE_CART',
+    'ADD_CART_ITEM': 'ADD_CART_ITEM',
+    'REMOVE_CART_ITEM': 'REMOVE_CART_ITEM',
+    'CLEAR_CART_ITEM': 'CLEAR_CART_ITEM'
+}
+
+const cartReducer = (state, action) =>{
+    const {type, payload} = action;
+
+    switch(type){
+        case CART_ACTION_TYPES.TOGGLE_CART:
+            return{
+                ...state,
+                isCartOpen: !state.isCartOpen
+            }
+        case CART_ACTION_TYPES.ADD_CART_ITEM:
+            return{
+                ...state,
+                cartItems: addCartItem(),
+                cartTotalQuantity: state.cartItems.reduce((total, cartItem) => total + cartItem.quantity, 0),
+                cartTotalPrice: state.cartItems.reduce((total, cartItem) => total + cartItem.price * cartItem.quantity, 0),
+            }
+        case CART_ACTION_TYPES.REMOVE_CART_ITEM:
+            return{
+                ...state,
+                cartItems: removeCartItem(),
+                cartTotalQuantity: state.cartItems.reduce((total, cartItem) => total + cartItem.quantity, 0),
+                cartTotalPrice: state.cartItems.reduce((total, cartItem) => total + cartItem.price * cartItem.quantity, 0),
+            }
+        case CART_ACTION_TYPES.CLEAR_CART_ITEM:
+            return{
+                ...state,
+                cartItems: clearCartItem(),
+                cartTotalQuantity: state.cartItems.reduce((total, cartItem) => total + cartItem.quantity, 0),
+                cartTotalPrice: state.cartItems.reduce((total, cartItem) => total + cartItem.price * cartItem.quantity, 0),
+            }
+        default:
+            throw new Error(`Unhandled type ${type} in the cartReducer`)
+    }
+}
+
+const INITIAL_STATE = {
+    isCartOpen: false,
+    cartTotalPrice: 0,
+    cartTotalQuantity: 0,
+    cartItems: [],
+}
+
 // actual value you want to access
 export const CartContext = createContext({
     isCartOpen: false,
@@ -56,10 +106,21 @@ export const CartContext = createContext({
 });
 
 export const CartProvider = ({children}) => {
-    const [isCartOpen, setIsCartOpen] = useState(false);
-    const [cartItems, setCartItems] = useState([]);
-    const [cartTotalQuantity, setCartTotalQuantity] = useState(0);
-    const [cartTotalPrice, setCartTotalPrice] = useState(0);
+    const [ state, dispatch ] = useReducer(cartReducer, INITIAL_STATE);
+
+    const { isCartOpen, cartTotalPrice, cartTotalQuantity, cartItems } = state;
+
+    const setCartTotalPrice = (newCartTotalPrice) => {
+        dispatch({type: CART_ACTION_TYPES.SET_CURRENT_USER, payload: newCartTotalPrice})
+    }
+
+    const setCartTotalQuantity = (newCartTotalPrice) => {
+        dispatch({type: CART_ACTION_TYPES.SET_CURRENT_USER, payload: newCartTotalPrice})
+    }
+
+    const addItemToCart = (newCartTotalPrice) => {
+        dispatch({type: CART_ACTION_TYPES.SET_CURRENT_USER, payload: newCartTotalPrice})
+    }
 
     useEffect(() => {
         const newCartTotalPrice = cartItems.reduce((total, cartItem) => total + cartItem.price * cartItem.quantity, 0);
