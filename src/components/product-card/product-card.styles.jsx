@@ -8,6 +8,7 @@ export const ProductCardContainer = styled.div`
     position: relative;
   
     img {
+      aspect-ratio: auto;
       width: 100%;
       height: 95%;
       object-fit: cover;
