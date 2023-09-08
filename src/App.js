@@ -3,7 +3,7 @@ import { useEffect} from "react";
 import { useDispatch } from 'react-redux'
 
 
-import {onAuthStateChangedListener, createUserDocumentFromAuth} from './utils/firebase/firebase.utils'
+import {onAuthStateChangedListener, createUserDocumentFromAuth} from './utils/firebase.utils'
 
 import { setCurrentUser } from './store/user/user.action';
 import Home from './routes/home/home.component'

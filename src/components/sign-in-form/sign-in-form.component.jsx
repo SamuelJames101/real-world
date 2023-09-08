@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Button, {BUTTON_TYPE_CLASSES} from '../button/button.component';
 import FormInput from '../form-input/form-input.component';
 
-import {signInWithGooglePopup, signInAuthUserWithEmailAndPassword} from '../../utils/firebase/firebase.utils'
+import {signInWithGooglePopup, signInAuthUserWithEmailAndPassword} from '../../utils/firebase.utils'
 
 import { SignInContainer, ButtonContainer } from './sign-in-form.styles';
 
